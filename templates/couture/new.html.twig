@@ -1,0 +1,28 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Création d'un produit Couture
+{% endblock %}
+
+{# on dit ici avec {% form_theme form _self %} a twig que on veut utiliser cette theme 
+qui et ici dans cette page pour notre affichage #}
+{% form_theme form 'couture/_collection.html.twig' %}
+
+{% block body %}
+
+	<div class="container">
+		<h1>Créer un nouveaux produit Couture</h1>
+
+		{{ form_start(form) }}
+
+		{{ form_widget(form) }}
+
+		<button type="submit" class="btn btn-primary">Créer un nouveaux Bijoux</button>
+
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script src="/js/couture.js"></script>
+{% endblock %}
