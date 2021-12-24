@@ -7,6 +7,8 @@ use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\Bijoux;
 use App\Entity\Couture;
+use App\Entity\CommentB;
+use App\Entity\CommentC;
 use App\Entity\ImageBijoux;
 use App\Entity\ImageCouture;
 use Doctrine\Persistence\ObjectManager;
@@ -35,13 +37,13 @@ class AppFixtures extends Fixture
         // Je créer un Utilisateur qui aurra le Role Admin
         $adminUser = new User();
         $adminUser->setFirstName('Gheorghina')
-                  ->setLastName('Costincianu')
-                  ->setEmail('gheorghina@gmail.com')
-                  ->setHash($this->encoder->hashPassword($adminUser, 'password'))
-                  ->setPicture('https://lorempixel.com/64/64/')
-                  ->setIntroduction($faker->sentence())
-                  ->setDescription('<p>' . join('<p></p>', $faker->paragraphs(3)) . '</p>')
-                  ->addUserRole($adminRole);
+            ->setLastName('Costincianu')
+            ->setEmail('gheorghina@gmail.com')
+            ->setHash($this->encoder->hashPassword($adminUser, 'password'))
+            ->setPicture('https://lorempixel.com/64/64/')
+            ->setIntroduction($faker->sentence())
+            ->setDescription('<p>' . join('<p></p>', $faker->paragraphs(3)) . '</p>')
+            ->addUserRole($adminRole);
         $manager->persist($adminUser);
 
         // Nous gérons les utilisateurs 
@@ -70,8 +72,8 @@ class AppFixtures extends Fixture
 
             // Hashage de mot de passe qui implemente la (UserPasswordHasherInterface)
             $hash = $this->encoder->hashPassword(
-            $user, 
-            'password'
+                $user,
+                'password'
             );
 
             $user->setFirstName($faker->firstName($genre))
@@ -122,6 +124,17 @@ class AppFixtures extends Fixture
                 $manager->persist($imageBijoux);
             }
 
+            //  Gestion de commentaires 
+            if (mt_rand(0, 1)) {
+                $commentB = new CommentB();
+                $commentB->setContent($faker->paragraph())
+                    ->setRating(mt_rand(1, 5))
+                    ->setAuthor($user)
+                    ->setBijoux($bijoux);
+
+                $manager->persist($commentB);
+            }
+
             $manager->persist($bijoux);
         }
 
@@ -152,6 +165,19 @@ class AppFixtures extends Fixture
 
                 $manager->persist($imageCouture);
             }
+
+            //  Gestion de commentaires 
+            if (mt_rand(0, 1)) {
+                $commentC = new CommentC();
+                $commentC->setContent($faker->paragraph())
+                    ->setRating(mt_rand(1, 5))
+                    ->setAuthor($user)
+                    ->setCouture($couture);
+
+                $manager->persist($commentC);
+            }
+
+
 
             $manager->persist($couture);
         }

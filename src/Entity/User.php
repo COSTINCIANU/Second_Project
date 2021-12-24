@@ -101,6 +101,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $userRoles;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CommentB::class, mappedBy="author", orphanRemoval=true)
+     */
+    private $commentBs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CommentC::class, mappedBy="author", orphanRemoval=true)
+     */
+    private $commentCs;
+
 
     
     public function getFullName() {
@@ -128,6 +138,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->bijouxs = new ArrayCollection();
         $this->coutures = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
+        $this->commentBs = new ArrayCollection();
+        $this->commentCs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -357,6 +369,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->userRoles->removeElement($userRole)) {
             $userRole->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentB[]
+     */
+    public function getCommentBs(): Collection
+    {
+        return $this->commentBs;
+    }
+
+    public function addCommentB(CommentB $commentB): self
+    {
+        if (!$this->commentBs->contains($commentB)) {
+            $this->commentBs[] = $commentB;
+            $commentB->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentB(CommentB $commentB): self
+    {
+        if ($this->commentBs->removeElement($commentB)) {
+            // set the owning side to null (unless already changed)
+            if ($commentB->getAuthor() === $this) {
+                $commentB->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentC[]
+     */
+    public function getCommentCs(): Collection
+    {
+        return $this->commentCs;
+    }
+
+    public function addCommentC(CommentC $commentC): self
+    {
+        if (!$this->commentCs->contains($commentC)) {
+            $this->commentCs[] = $commentC;
+            $commentC->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentC(CommentC $commentC): self
+    {
+        if ($this->commentCs->removeElement($commentC)) {
+            // set the owning side to null (unless already changed)
+            if ($commentC->getAuthor() === $this) {
+                $commentC->setAuthor(null);
+            }
         }
 
         return $this;

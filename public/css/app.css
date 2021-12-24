@@ -15,7 +15,11 @@ div.bijoux-title p {
     color: white;
     text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
 }
-
+div.bijoux-title .btn {
+    margin-top: 2em;
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
 div.carousel-caption {
    text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
 }
@@ -33,6 +37,12 @@ div.couture-title h1,
 div.couture-title p {
     color: white;
     text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+}
+
+div.coture-title .btn {
+    margin-top: 2em;
+    font-size: 1.5em;
+    line-height: 1.5em;
 }
 
 div.carousel-caption {
@@ -57,3 +67,23 @@ div.carousel-caption {
     max-width: 24px;
     max-height: 24px;
 }
+
+.avatar-micro {
+    max-width: 20px;
+    max-height: 20px;
+}
+/* *********** LES ETOILS JEAUNE ************************* */
+
+span.rating i {
+    color: goldenrod;
+}
+
+.alert a {
+    text-decoration: none;
+}
+
+.alert .btn {
+    color: white;
+}
+/* *********** LA PAGE D'UN PRODUIT ************************* */
+

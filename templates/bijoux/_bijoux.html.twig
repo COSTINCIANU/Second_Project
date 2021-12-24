@@ -1,4 +1,4 @@
-{% set url = path('bijouxs_show', {'slug': bijoux.slug}) %}
+{% set url = path('bijouxs_show', {'slug': bijoux.slug}) %} 
 <div class="col-md-4">
 	<div class="card bg-light mb-3">
 		<div class="card-header text-center">
@@ -6,7 +6,11 @@
 			<strong>créer</strong>
 			/ main
 			<br>
+			{% if bijoux.commentBs | length > 0 %}
+				{% include "partials/rating.html.twig" with {"rating" : bijoux.avgRatings } %}
+				{% else %}
 			<small>Pas encore noté</small>
+			{% endif %}
 		</div>
 		<a href="{{ url }}">
 			<img src="{{ bijoux.coverImage }}" alt="" style="height: 200px; width: 100%; display: block">
@@ -21,7 +25,7 @@
 			<p class="card-text">
 				{{ bijoux.introduction }}
 			</p>
-			<a href="{{ url }}" class="btn btn-secondary">En savoir plus !</a>
+			<a href="{{ url }}" class="btn btn-primary float-right">En savoir plus !</a>
 
 
 			{# si utilisateur connecter et si l'author de produit alors on affiche le button #}

@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Bijoux;
+use App\Entity\CommentB;
 use App\Form\BijouxType;
 use App\Entity\ImageBijoux;
+use App\Form\CommentBType;
 use App\Repository\BijouxRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,7 +65,7 @@ class BijouxController extends AbstractController
                 $manager->persist($imageBijoux);
             }
 
-            // On ajoute l'author de produit qui l'ajouter
+            // On ajoute l'author de produit qui l'ajouter ce produit
             $bijoux->setAuthor($this->getUser());
 
             $manager->persist($bijoux);
@@ -87,7 +90,7 @@ class BijouxController extends AbstractController
      *
      * @Route("/bijouxs/{slug}/edit", name="bijouxs_edit")
      * @Security("is_granted('ROLE_USER') and user === bijoux.getAuthor()", message="Le
-     produit ne vous appartient pas, vous ne pouvez pas le modifier !")
+     * produit ne vous appartient pas, vous ne pouvez pas le modifier !")
      * @return Response
      */
     public function edit(Bijoux $bijoux, Request $request, EntityManagerInterface $manager)
@@ -131,19 +134,49 @@ class BijouxController extends AbstractController
      * Permet de afficher une seule Produit
      *
      * @Route("/bijouxs/{slug}", name="bijouxs_show")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function show(Bijoux $bijoux)
+    public function show(Bijoux $bijoux, Request $request, EntityManagerInterface $manager)
     {
         // Je récupère l'produit qui corespond au slug !
         // $bijoux = $repo->findOneBySlug($slug);
 
+        // On créer un nouveau commentaire 
+        $commentB = new CommentB();
+
+        // on gere et on créer le formulaire pour les commentaires
+        $form = $this->createForm(CommentBType::class, $commentB);
+
+        $form->handleRequest($request);
+
+        // On taite le formulaire avec toute ses parametre 
+        if ($form->isSubmitted() && $form->isValid()) {
+            // On dit que cette commentaire et relie a un produit Couture(setCouture) et 
+            // Ce produit et relier a la table de CommentaireC quilui meme et relier a 
+            // l'utilisateur qui ecrit le commentaire en cette moment
+            $commentB->setBijoux($commentB->getBijoux())
+                ->setAuthor($this->getUser())
+                ->setCreatedAt(new DateTime())
+                ->setBijoux($bijoux);
+
+            $manager->persist($commentB);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                "Votre Commentaire a bien été pris en compte !"
+            );
+        }
+
         return $this->render('bijoux/show.html.twig', [
-            'bijoux' => $bijoux
+            'bijoux' => $bijoux,
+            'form'   => $form->createView()
         ]);
     }
 
-        /**
+    /**
      * Permet de supprimer un Produit
      *
      * @Route("/bijouxs/{slug}/delete", name="bijouxs_delete")
@@ -153,16 +186,17 @@ class BijouxController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function delete(Bijoux $bijoux, EntityManagerInterface $manager) {
+    public function delete(Bijoux $bijoux, EntityManagerInterface $manager)
+    {
         // On supprime le produit via le manager
         $manager->remove($bijoux);
         $manager->flush();
 
         $this->addFlash(
-            'success', 
+            'success',
             "Le produit <strong>{$bijoux->getTitle()}</strong> a bien été supprimée"
 
-            );
+        );
         // on fait une redirection
         return $this->redirectToRoute("bijouxs_index");
     }

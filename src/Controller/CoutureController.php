@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Couture;
+use App\Entity\CommentC;
 use App\Form\CoutureType;
+use App\Form\CommentCType;
 use App\Entity\ImageCouture;
 use App\Repository\CoutureRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -102,7 +105,7 @@ class CoutureController extends AbstractController
      *
      * @Route("/coutures/{slug}/edit", name="coutures_edit")
      * @Security("is_granted('ROLE_USER') and user === couture.getAuthor()", message="Le
-     produit ne vous appartient pas, vous ne pouvez pas le modifier !")
+     * produit ne vous appartient pas, vous ne pouvez pas le modifier !")
      * @return Response
      */
     public function edit(Couture $couture, Request $request, EntityManagerInterface $manager)
@@ -146,15 +149,45 @@ class CoutureController extends AbstractController
     /**
      * Permet de afficher une seule Produit
      * @Route("/coutures/{slug}", name="coutures_show")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function show(Couture $couture)
+    public function show(Couture $couture, EntityManagerInterface $manager, Request $request)
     {
         // Je récupère l'produit qui corespond au slug !
         // $couture = $repo->findOneBySlug($slug);
 
+        // On créer un nouveau commentaire 
+        $commentC = new CommentC();
+
+        // on gere et on créer le formulaire pour les commentaires
+        $form = $this->createForm(CommentCType::class, $commentC);
+
+        $form->handleRequest($request);
+
+        // On taite le formulaire avec toute ses parametre 
+        if ($form->isSubmitted() && $form->isValid()) {
+            // On dit que cette commentaire et relie a un produit Couture(setCouture) et 
+            // Ce produit et relier a la table de CommentaireC quilui meme et relier a 
+            // l'utilisateur qui ecrit le commentaire en cette moment
+            $commentC->setCouture($commentC->getCouture())
+                ->setAuthor($this->getUser())
+                ->setCreatedAt(new DateTime())
+                ->setCouture($couture);
+
+            $manager->persist($commentC);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                "Votre Commentaire a bien été pris en compte !"
+            );
+        }
+
         return $this->render('couture/show.html.twig', [
-            'couture' => $couture
+            'couture' => $couture,
+            'form' => $form->createView()
         ]);
     }
 
@@ -168,16 +201,17 @@ class CoutureController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    public function delete(Couture $couture, EntityManagerInterface $manager) {
+    public function delete(Couture $couture, EntityManagerInterface $manager)
+    {
         // On supprime le produit via le manager
         $manager->remove($couture);
         $manager->flush();
 
         $this->addFlash(
-            'success', 
+            'success',
             "Le produit <strong>{$couture->getTitle()}</strong> a bien été supprimée"
 
-            );
+        );
         // on fait une redirection
         return $this->redirectToRoute("coutures_index");
     }

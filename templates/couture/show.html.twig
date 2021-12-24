@@ -57,8 +57,74 @@
 						<span class="sr-only">Next</span>
 					</a>
 				</div>
+
+			<hr>
+
+
+            {# Boucle pour les commentaire COUTURE #}
+			{% if couture.commentCs | length > 0 %}
+				<h2 class="mb-3">Commentaire de nos visiteurs :</h2>
+				
+				<div class="alert alert-info">
+					<h4 class="alert-heading text-center">
+						<div class="row align-items-center">
+							<div class="col">
+								Note globale donnée par nos visiteurs
+							</div>
+							<div class="col">
+								{# Les Etoiles #}
+								{# {% set rating = commentC.rating %} #}
+								{% include "partials/rating.html.twig" with {"rating" : couture.avgRatings } %}
+						<br>
+								<small>(Calculée sur {{ couture.commentCs | length }} avis)</small>
+							
+							</div>
+						</div>
+					</h4>
+				</div>
+				
+				{% for commentC in couture.commentCs %}
+					<div class="bg-light rounded mb-3 py-3 px-3">
+						<strong>{{ commentC.author.firstName }}</strong> a dit :
+						<blockquote>
+							{{ commentC.content }}
+						</blockquote>
+						<strong>Note donnée par :</strong> 
+					    
+						{# Les Etoiles #}
+
+						{# {% set rating = commentB.rating %} #}
+						{% include "partials/rating.html.twig" with {"rating" : commentC.rating} %}
+					
+					</div>
+				{% endfor %}
+			{% else %}
+				<h2>Ce produit n'a pas encore reçu de commentaires ...</h2>
+			{% endif %}
+
+			{# Formulaire commentaires lese #}
+			<div class="aler alert-light">
+				<h2 class="alert-heading">Votre avis compte !</h2>
+					{% set commentC = couture.commentCFromAuthor(app.user) %}
+
+				{% if commentC is not null %}
+					<blockquote>
+						{{ commentC.content }}
+					</blockquote>
+
+					<strong>Note :</strong>
+					{% include 'partials/rating.html.twig' with {'rating' : commentC.rating} %}
+				{% else %}
+					{{ form_start(form) }}
+					{{ form_widget(form) }}
+					<button type="submit" class="btn btn-success mt-3">Confirmer !</button>
+					{{ form_end(form) }}
+
+				{% endif %}
+			</div>
 			</div>
 
+</div>
 			<div
 				class="col">
 				{#  variable a = author #}

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BijouxRepository;
@@ -30,8 +31,8 @@ class Bijoux
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=10, max=255, 
-        minMessage="Le titre doit faire plus de 10 caractères",
-        maxMessage="Le titre ne peut pas faire  plus de  255 caractères !")
+     *  minMessage="Le titre doit faire plus de 10 caractères",
+     *  maxMessage="Le titre ne peut pas faire  plus de  255 caractères !")
      */
     private $title;
 
@@ -69,9 +70,15 @@ class Bijoux
      */
     private $author;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CommentB::class, mappedBy="bijoux", orphanRemoval=true)
+     */
+    private $commentBs;
+
     public function __construct()
     {
         $this->imageBijouxs = new ArrayCollection();
+        $this->commentBs = new ArrayCollection();
     }
 
     /**
@@ -89,6 +96,41 @@ class Bijoux
     }
 
 
+    /**
+     * Permet de récupérer le commentaire d'un auteur par rapport à un produit Bijoux
+     *
+     * @param User $author
+     * @return CommentB|null
+     */
+    public function getCommentBFromAuthor(User $author)
+    {
+        // on boucle sur le tableau de commentaires pour chaque commentaire que j'ai dans cette produit
+        foreach ($this->commentBs as $commentB) {
+            // si l'auteur de commentaire se le meme que ici alors je veut returne ce commentaire
+            if ($commentB->getAuthor() === $author) return $commentB;
+        }
+        // si non on returne null veut que il a pas encore commenter ce produit
+        return null;
+    }
+
+
+    /**
+     * Permet de obtenir la moyenne globale de notes reçu pour ce produit
+     *
+     * @return float
+     */
+    public function getAvgRatings()
+    {
+        // Calculer la somme des notations
+        $sum = array_reduce($this->commentBs->toArray(), function ($total, $commentB) {
+            return $total + $commentB->getRating();
+        }, 0);
+
+        //  Faire le division pour avoir la moyenne
+        if (count($this->commentBs) > 0) return $sum / count($this->commentBs);
+
+        return 0;
+    }
 
     public function getId(): ?int
     {
@@ -194,6 +236,36 @@ class Bijoux
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommentB[]
+     */
+    public function getCommentBs(): Collection
+    {
+        return $this->commentBs;
+    }
+
+    public function addCommentB(CommentB $commentB): self
+    {
+        if (!$this->commentBs->contains($commentB)) {
+            $this->commentBs[] = $commentB;
+            $commentB->setBijoux($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentB(CommentB $commentB): self
+    {
+        if ($this->commentBs->removeElement($commentB)) {
+            // set the owning side to null (unless already changed)
+            if ($commentB->getBijoux() === $this) {
+                $commentB->setBijoux(null);
+            }
+        }
 
         return $this;
     }

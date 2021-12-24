@@ -29,55 +29,58 @@ class AccountController extends AbstractController
     public function login(AuthenticationUtils $utils): Response
     {
         $error = $utils->getLastAuthenticationError();
-        
+
         // On recupere le dernier  nom d'utilisateur qui a etait taper dans le form
         $username = $utils->getLastUsername();
+
         return $this->render('account/login.html.twig', [
-        'hasError' => $error !== null,
-        'username' => $username
+            'hasError' => $error !== null,
+            'username' => $username
         ]);
     }
 
     /**
-    * Permet de se déconnecter
-    *
-    * @Route("/logout",name="account_logout")
-    *
-    * @return void
-    */
+     * Permet de se déconnecter
+     *
+     * @Route("/logout",name="account_logout")
+     *
+     * @return void
+     */
     public function logout()
     {
-    // ..... rien
+        // ..... rien
     }
 
     /**
-    * Permet d'afficher le formulaire d'inscription
-    *
-    * @Route("/register", name="account_register")
-    *
-    * @return Response
-    */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $encoder) {
+     * Permet d'afficher le formulaire d'inscription
+     *
+     * @Route("/register", name="account_register")
+     *
+     * @return Response
+     */
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $encoder)
+    {
         $user = new User();
 
         $form = $this->createForm(RegistrationType::class, $user);
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
-        //  On demande de encoder le mod de passe d'utilisateur qui et rentre dans le form
-        $hash = $encoder->hashPassword($user, $user->getHash());
-        // Je te moditie ton mot de passe 
-        $user->setHash($hash);
-        // On persiste l'utilisateur qui et entre dans le form si tout vas bien
-        $manager->persist($user);
-        //  Et on le en vois dans la BDD
-        $manager->flush();
+        if ($form->isSubmitted() && $form->isValid()) {
+            //  On demande de encoder le mod de passe d'utilisateur qui et rentre dans le form
+            $hash = $encoder->hashPassword($user, $user->getHash());
+            // Je te moditie ton mot de passe 
+            $user->setHash($hash);
+            // On persiste l'utilisateur qui et entre dans le form si tout vas bien
+            $manager->persist($user);
+            //  Et on le en vois dans la BDD
+            $manager->flush();
 
-        $this->addFlash(
-            'success',
-            "Votre compre a bien été créé ! Vous pouvez maintenant vous connecter !");
-        return $this->redirectToRoute('account_login');
+            $this->addFlash(
+                'success',
+                "Votre compre a bien été créé ! Vous pouvez maintenant vous connecter !"
+            );
+            return $this->redirectToRoute('account_login');
         }
 
         return $this->render('account/registration.html.twig', [
@@ -92,15 +95,16 @@ class AccountController extends AbstractController
      * @IsGranted("ROLE_USER")
      * @return Response
      */
-    public function profile(Request $request, EntityManagerInterface $manager) {
+    public function profile(Request $request, EntityManagerInterface $manager)
+    {
         // On recoupere l'utilisateur qui est acctulement connecter
         $user = $this->getUser();
 
         $form = $this->createForm(AccountType::class, $user);
-        
+
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $manager->persist($user);
             $manager->flush();
 
@@ -123,9 +127,10 @@ class AccountController extends AbstractController
      * @Route("/account/password-update", name="account_password")
      * @IsGranted("ROLE_USER")
      * @return Response
-     */ 
-    public function updatePassword(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $encoder) {
-        
+     */
+    public function updatePassword(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $encoder)
+    {
+
         $passwordUpdate = new PasswordUpdate();
 
         // User accutuelement connecté
@@ -135,13 +140,13 @@ class AccountController extends AbstractController
         // on demande la request
         $form->handleRequest($request);
         // On verifie si le formulaire et valid et si il a etait sumis
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // 1.) Verifier que le oldPassword du formulaire soit le même que le password d'user
-            if(!password_verify($passwordUpdate->getOldPassword(), $user->getHash())){
+            if (!password_verify($passwordUpdate->getOldPassword(), $user->getHash())) {
                 // Gérer l'erreur
                 // On accede au champ de form et on demande via le formulaire de recupere avec le get le mot de passe actuel et et avec le FormError on le verifie si il et bon se OK si no L"eereur est afficher
                 $form->get('oldPassword')->addError(new FormError("Le mot de passe que vous avez tapé n'est pas votre mot de passe actuel !"));
-            }  else {
+            } else {
                 //  On confirme le nouveau mot de passe
                 $newPassword = $passwordUpdate->getNewPassword();
                 //  Change moi le mot de passe de user 
@@ -156,17 +161,16 @@ class AccountController extends AbstractController
 
                 // Message flash pour notifier les changement de mot de passe
                 $this->addFlash(
-                    'success', 
+                    'success',
                     "Votre mot de passe a bien été modifié !"
-                    );
+                );
                 // On redirige ver la page d'accueil
                 return $this->redirectToRoute('homepage');
-            }       
-
+            }
         }
         return $this->render('account/password.html.twig', [
             'form' => $form->createView()
-            ]);
+        ]);
     }
 
 
@@ -176,10 +180,11 @@ class AccountController extends AbstractController
      * @Route("/account", name="account_index")
      * @IsGranted("ROLE_USER")
      * @return Response
-     */ 
-    public function myAccount() {
+     */
+    public function myAccount()
+    {
         return $this->render('user/index.html.twig', [
-            'user' =>$this->getUser()
-            ]);
+            'user' => $this->getUser()
+        ]);
     }
 }
