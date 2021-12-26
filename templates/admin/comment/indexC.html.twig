@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for commentC in commentCs %}
+            {% for commentC in pagination.data %}
                 <tr>
                     <td>{{commentC.id}}</td>
                     <td>{{commentC.createdAt|date('d/m/Y H:i')}}</td>
@@ -43,5 +43,9 @@
             {% endfor %}
             </tbody>
         </table>
+
+        {{pagination.display()}}
+        
+        {# {% include "admin/partials/pagination.html.twig" with {'route': 'admin_commentC_index'} %} #}
 </div>
 {% endblock %}

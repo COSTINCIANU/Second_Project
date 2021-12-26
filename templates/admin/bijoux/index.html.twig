@@ -16,7 +16,8 @@
         </thead>
 
         <tbody>
-          {% for bijoux in bijouxs %}  
+          {% for bijoux in pagination.data %}   
+          {# {% for bijoux in bijouxs %}   #}
             <tr>
                 <td>{{bijoux.id}}</td>
                 <td>{{bijoux.title}}</td>
@@ -48,6 +49,29 @@
         </tbody>
     
     </table>
+
+    {{pagination.display()}}
+
+    {# {% include "admin/partials/pagination.html.twig" with {'route': 'admin_bijouxs_index'} %} #}
+
+
+        {# <div class="d-flex justify-content-center">
+            {% set page = pagination.page %}
+            {% set pages = pagination.pages %}
+            <ul class="pagination">
+                <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                    <a class="page-link" href="{{ path('admin_bijouxs_index', {'page': page - 1}) }}">&laquo;</a>
+                </li>
+                {% for i in 1..pages %}
+                <li class="page-item {% if page == i %}active{% endif %}">
+                    <a class="page-link" href="{{ path('admin_bijouxs_index', {'page' : i }) }}">{{ i }}</a>
+                </li>
+                {% endfor %}
+                <li class="page-item {% if page == pages %}disabled{% endif %}">
+                    <a class="page-link" href="{{ path('admin_bijouxs_index', {'page' : page + 1}) }}">&raquo;</a>
+                </li>
+            </ul>
+        </div> #}
 
 </div>
 {% endblock %}

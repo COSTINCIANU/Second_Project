@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\CommentB;
 use App\Form\AdminCommentBijouxType;
 use App\Repository\CommentBRepository;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,15 +16,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminCommentBController extends AbstractController
 {
     /**
-     * @Route("/admin/commentbs", name="admin_commentB_index")
+     * @Route("/admin/commentbs/{page<\d+>?1}", name="admin_commentB_index")
      */
-    public function index(CommentBRepository $repo): Response
+    public function index(CommentBRepository $repo, $page, PaginationService $pagination): Response
     {
         // $repo = $this->getDoctrine()->getRepository(CommentB::class);
 
-        $commentBs = $repo->findAll();
+        $pagination->setEntityClass(CommentB::class)
+            ->setLimit(5)
+            ->setPage($page);
+
         return $this->render('admin/comment/indexB.html.twig', [
-            'commentBs' => $commentBs
+            'pagination' => $pagination
         ]);
     }
 

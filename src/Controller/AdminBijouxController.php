@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Bijoux;
 use App\Form\BijouxType;
 use App\Repository\BijouxRepository;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,13 +15,42 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminBijouxController extends AbstractController
 {
     /**
-     * @Route("/admin/bijouxs", name="admin_bijouxs_index")
+     * @Route("/admin/bijouxs/{page<\d+>?1}", name="admin_bijouxs_index")
      * 
      */
-    public function indexBijoux(BijouxRepository $repo): Response
+    public function indexBijoux(BijouxRepository $repo, $page, PaginationService $pagination): Response
     {
+
+        // $bijouxs = $pagination->getData();
+        $pagination->setEntityClass(Bijoux::class)
+            ->setPage($page);
+
+
+        // requirements={"page": "\d+"}
+        // {page<\d+>?1} le ? = optionnell et 1= valeur par default
+
+        // Méthode find: perment de retrouver un enregistrement par son identitfiant
+        // $bijoux = $repo->find(499);
+
+        // variable de limite de page sur 10
+        // $limit = 10;
+
+        // la page de depart * la limit (10) - la limit qui et de 10 produit par page
+        // 1 * 10 = 10 - 10 = 0
+        // 2 * 10 = 20 - 10 = 10
+        // $start = $page * $limit - $limit;
+
+
+        // on doit connaitre combien le total de produit pour rende la pagination dynamique
+        // $total = count($repo->findAll());
+
+        // le nombre total de page que j'ai je divise par la limit
+        // 3.4 => 4 avec la fonction ciel()
+        // $pages = ceil($total / $limit);
+
+
         return $this->render('admin/bijoux/index.html.twig', [
-            'bijouxs' => $repo->findAll()
+            'pagination' => $pagination
         ]);
     }
 
