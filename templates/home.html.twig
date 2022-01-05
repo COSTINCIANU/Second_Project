@@ -29,75 +29,9 @@
 		{# Produits Bijoux #}
 		<h2 class="h1 my-5">Nos Bijoux stars</h2>
 		<div class="row">
-
-			<div class="col-md-4">
-				<div class="card bg-light mb-3">
-					<div class="card-header text-center">
-						Nos Bijoux,
-						<strong>créer</strong>
-						/ main
-						<br>
-						<small>Pas encore noté</small>
-					</div>
-					<img src="http://placehold.it/1000x400" alt="jifiefjijfeif" style="height: 200px; width: 100%; display: block">
-
-					<div class="card-body">
-						<h4 class="card-title">
-							Bijoux de ouffffff !
-						</h4>
-						<p class="card-text">
-							Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum earum rem reiciendis! Suscipit accusamus modi minima voluptate labore aliquam assumenda.
-						</p>
-						<a href="#" class="btn btn-secondary">En savoir plus !</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card bg-light mb-3">
-					<div class="card-header text-center">
-						Nos Bijoux,
-						<strong>créer</strong>
-						/ main
-						<br>
-						<small>Pas encore noté</small>
-					</div>
-					<img src="http://placehold.it/1000x400" alt="jifiefjijfeif" style="height: 200px; width: 100%; display: block">
-
-					<div class="card-body">
-						<h4 class="card-title">
-							Bijoux de ouffffff !
-						</h4>
-						<p class="card-text">
-							Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum earum rem reiciendis! Suscipit accusamus modi minima voluptate labore aliquam assumenda.
-						</p>
-						<a href="#" class="btn btn-secondary">En savoir plus !</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card bg-light mb-3">
-					<div class="card-header text-center">
-						Nos Bijoux,
-						<strong>créer</strong>
-						/ main
-						<br>
-						<small>Pas encore noté</small>
-					</div>
-					<img src="http://placehold.it/1000x400" alt="jifiefjijfeif" style="height: 200px; width: 100%; display: block">
-
-					<div class="card-body">
-						<h4 class="card-title">
-							Bijoux de ouffffff !
-						</h4>
-						<p class="card-text">
-							Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum earum rem reiciendis! Suscipit accusamus modi minima voluptate labore aliquam assumenda.
-						</p>
-						<a href="#" class="btn btn-secondary">En savoir plus !</a>
-					</div>
-				</div>
-			</div>
+			{% for data in bijouxs %}
+				{% include 'bijoux/_bijoux.html.twig' with {'bijoux': data.bijoux} %}
+			{% endfor %}
 		</div>
 
 		{# Container jumbotrom 2 Couture #}
@@ -121,109 +55,48 @@
 		</div>
 
 		{# Produits Couture #}
-		<h2 class="h1 my-5">Nos Couture stars</h2>
+		<h2 class="h1 my-5">Nos produits en Couture Star</h2>
 		<div class="row mt-5">
-
-			<div class="col-md-4">
-				<div class="card bg-light mb-3">
-					<div class="card-header text-center">
-						Nos céation couture,
-						<strong>créer</strong>
-						/ main
-						<br>
-						<small>Pas encore noté</small>
-					</div>
-					<img src="http://placehold.it/1000x400" alt="jifiefjijfeif" style="height: 200px; width: 100%; display: block">
-
-					<div class="card-body">
-						<h4 class="card-title">
-							Création en couture de ouffffff !
-						</h4>
-						<p class="card-text">
-							Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum earum rem reiciendis! Suscipit accusamus modi minima voluptate labore aliquam assumenda.
-						</p>
-						<a href="#" class="btn btn-secondary">En savoir plus !</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card bg-light mb-3">
-					<div class="card-header text-center">
-						Nos céation couture,
-						<strong>créer</strong>
-						/ main
-						<br>
-						<small>Pas encore noté</small>
-					</div>
-					<img src="http://placehold.it/1000x400" alt="jifiefjijfeif" style="height: 200px; width: 100%; display: block">
-
-					<div class="card-body">
-						<h4 class="card-title">
-							Création en couture de ouffffff !
-						</h4>
-						<p class="card-text">
-							Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum earum rem reiciendis! Suscipit accusamus modi minima voluptate labore aliquam assumenda.
-						</p>
-						<a href="#" class="btn btn-secondary">En savoir plus !</a>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card bg-light mb-3">
-					<div class="card-header text-center">
-						Nos céation couture,
-						<strong>créer</strong>
-						/ main
-						<br>
-						<small>Pas encore noté</small>
-					</div>
-					<img src="http://placehold.it/1000x400" alt="jifiefjijfeif" style="height: 200px; width: 100%; display: block">
-
-					<div class="card-body">
-						<h4 class="card-title">
-							Création en couture de ouffffff !
-						</h4>
-						<p class="card-text">
-							Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illum earum rem reiciendis! Suscipit accusamus modi minima voluptate labore aliquam assumenda.
-						</p>
-						<a href="#" class="btn btn-secondary">En savoir plus !</a>
-					</div>
-				</div>
-			</div>
+			{% for data in coutures %}
+				{% include 'couture/_couture.html.twig' with {'couture': data.couture} %}
+			{% endfor %}
 		</div>
 
 		{# Nous les creatrice de produits et bijoux #}
-		<h2 class="h1 my-5">Les créatrices</h2>
+		<h2 class="h1 my-5">Les Créatrices</h2>
+		{# {{dump(users)}} #}
 		<div class="row mt-5">
+			{% for data in users %}
 			<div class="col">
 				<div class="card border-secondary mb-3">
 					<div class="card-body">
-						<h4 class="card-title">Bijoux</h4>
+						<h4 class="card-title">{{data.user.fullName}}</h4>
 						<hr>
 						<div class="card-text">
-							<img src="http://placehold.it/64x64" alt="Avatar de Souad" class="float-left mr-3">
-							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, quaerat!</p>
-							<a href="#" class="btn btn-success float-right">En savoir plus</a>
+							<img src="{{data.user.picture}}" alt="Avatar de {{data.user.fullName}}" class="float-left mr-3">
+							<p>{{data.user.introduction}}</p>
+							<a href="{{ path('user_show', {'slug': data.user.slug}) }}" class="btn btn-success float-right">En savoir plus</a>
 						</div>
 					</div>
 				</div>
 			</div>
+			{% endfor %}
 
+			{# {% for data in users %}
 			<div class="col">
 				<div class="card border-secondary mb-3">
 					<div class="card-body">
-						<h4 class="card-title">Couture</h4>
+						<h4 class="card-title">{{data.user.fullName}}</h4>
 						<hr>
 						<div class="card-text">
-							<img src="img/coton1.jpg" alt="Avatar de Gheorghina" class="float-left mr-3">
-							<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis, quaerat!</p>
-							<a href="#" class="btn btn-success float-right">En savoir plus</a>
+							<img src="{{data.user.picture}}" alt="Avatar de {{data.user.fullName}}" class="float-left mr-3">
+							<p>{{data.user.introduction}}</p>
+							<a href="{{ path('user_show', {'slug': data.user.slug}) }}" class="btn btn-success float-right">En savoir plus</a>
 						</div>
 					</div>
 				</div>
 			</div>
+			{% endfor %} #}
 		</div>
 
 	</div>

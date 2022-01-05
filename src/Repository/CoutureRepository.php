@@ -19,6 +19,18 @@ class CoutureRepository extends ServiceEntityRepository
         parent::__construct($registry, Couture::class);
     }
 
+
+    public function findBestCoutures($limit)
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c as couture, AVG(cc.rating) as avgRatings')
+            ->join('c.commentCs', 'cc')
+            ->groupBy('c')
+            ->orderBy('avgRatings', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
     // /**
     //  * @return Couture[] Returns an array of Couture objects
     //  */

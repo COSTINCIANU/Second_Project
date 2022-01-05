@@ -19,6 +19,21 @@ class BijouxRepository extends ServiceEntityRepository
         parent::__construct($registry, Bijoux::class);
     }
 
+
+
+    public function findBestBijouxs($limit)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b as bijoux, AVG(cb.rating) as avgRatings')
+            ->join('b.commentBs', 'cb')
+            ->groupBy('b')
+            ->orderBy('avgRatings', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+
     // /**
     //  * @return Bijoux[] Returns an array of Bijoux objects
     //  */
